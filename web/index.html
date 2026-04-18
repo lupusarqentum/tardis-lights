@@ -49,6 +49,21 @@
                 height: 67px;
                 border-radius: 50%;
             }
+            .switch {
+                display: none;
+                cursor: pointer;
+            }
+            .switch_label {
+                display: inline-block;
+                width: 128px;
+                height: 128px;
+                cursor: pointer;
+                background-size: cover;
+                background-image: url("switch_down.png");
+            }
+            .switch:checked + .switch_label {
+                background-image: url("switch_up.png");
+            }
         </style>
         <script>
             setTimeout(() => {
@@ -64,16 +79,18 @@
             <table>
                 <tr>
                     <td>
-                        <div class="lightFuck" />
+                        <div class="lightFuck">
                     </td>
                     <td>
-                        <div class="lightOff light" id="light_1" />
+                        <div class="lightOff light" id="light_1">
                     </td>
                     <td>
-                        <div class="lightFuck" />
+                        <div class="lightFuck">
                     </td>
                 </tr>
             </table>
         </div>
+        <input class="switch" type="checkbox" id="switch_1">
+        <label for="switch_1" class="switch_label"></label>
     </body>
 </html>
