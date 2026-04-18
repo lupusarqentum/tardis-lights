@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>tardis-lights demo</title>
+        <title>TARDIS Lights Puzzle Simulator</title>
         <style>
             :root {
                 --light_on_color: rgb(154, 165, 255);
@@ -59,16 +59,15 @@
                 height: 128px;
                 cursor: pointer;
                 background-size: cover;
-                background-image: url("switch_down.png");
+                background-image: url("switch_up.png");
             }
             .switch:checked + .switch_label {
-                background-image: url("switch_up.png");
+                background-image: url("switch_down.png");
             }
             html, body {
                 height: 100%;
                 margin: 0;
             }
-
             body {
                 display: flex;
                 flex-direction: column;
@@ -77,69 +76,11 @@
                 background: coral;
             }
         </style>
-        <script>
-            setTimeout(() => {
-                document.getElementById("light_1").className = "lightOn light"
-            }, 2000);
-        </script>
+        <script src="app.js" defer></script>
     </head>
     <body>
         <h1 style="text-align: center;"">TARDIS Lights Puzzle Simulator</h1>
-        <div style="display: flex; justify-content: center;">
-            <div>
-                <div class="lightBorder", style="display: flex; justify-content: center; align-items: center;">
-                    <div class="lightFuck"></div>
-                    <div class="lightOff light", id="light_0"></div>
-                    <div class="lightFuck"></div>
-                </div>
-            </div>
-            <div>
-                <div class="lightBorder", style="display: flex; justify-content: center; align-items: center;">
-                    <div class="lightFuck"></div>
-                    <div class="lightOff light", id="light_0"></div>
-                    <div class="lightFuck"></div>
-                </div>
-            </div>
-            <div>
-                <div class="lightBorder", style="display: flex; justify-content: center; align-items: center;">
-                    <div class="lightFuck"></div>
-                    <div class="lightOff light", id="light_0"></div>
-                    <div class="lightFuck"></div>
-                </div>
-            </div>
-            <div>
-                <div class="lightBorder", style="display: flex; justify-content: center; align-items: center;">
-                    <div class="lightFuck"></div>
-                    <div class="lightOff light", id="light_0"></div>
-                    <div class="lightFuck"></div>
-                </div>
-            </div>
-            <div>
-                <div class="lightBorder", style="display: flex; justify-content: center; align-items: center;">
-                    <div class="lightFuck"></div>
-                    <div class="lightOff light", id="light_0"></div>
-                    <div class="lightFuck"></div>
-                </div>
-            </div>
-            <div>
-                <div class="lightBorder", style="display: flex; justify-content: center; align-items: center;">
-                    <div class="lightFuck"></div>
-                    <div class="lightOff light", id="light_0"></div>
-                    <div class="lightFuck"></div>
-                </div>
-            </div>
-        </div>
-        <div style="display: flex;  justify-content: center;">
-            <input class="switch" type="checkbox" id="switch_1">
-            <label for="switch_1" class="switch_label"></label>
-            <input class="switch" type="checkbox" id="switch_2">
-            <label for="switch_2" class="switch_label"></label>
-            <input class="switch" type="checkbox" id="switch_3">
-            <label for="switch_3" class="switch_label"></label>
-            <input class="switch" type="checkbox" id="switch_4">
-            <label for="switch_4" class="switch_label"></label>
-            <input class="switch" type="checkbox" id="switch_5">
-            <label for="switch_5" class="switch_label"></label>
-        </div>
+        <div style="display: flex; justify-content: center;" id="lightContainer"></div>
+        <div style="display: flex; justify-content: center;" id="switchContainer"></div>
     </body>
 </html>
