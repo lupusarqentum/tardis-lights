@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>tardis-lights demo</title>
+        <style>
+            :root {
+                --light_on_color: rgb(154, 165, 255);
+                --light_off_color: rgb(186, 186, 186);
+                --light_top_color: rgb(134, 134, 134);
+                --light_border_color: rgb(155, 155, 155);
+            }
+            .light {
+                border-radius: 49%;
+                width: 60px;
+                height: 60px;
+            }
+            .lightOn {
+                background-image: linear-gradient(
+                    to bottom,
+                    var(--light_top_color) 0%,
+                    var(--light_top_color) 45%,
+                    var(--light_on_color) 65%,
+                    var(--light_on_color) 100%
+                );
+            }
+            .lightOff {
+                background-image: linear-gradient(
+                    to bottom,
+                    var(--light_top_color) 0%,
+                    var(--light_top_color) 45%,
+                    var(--light_off_color) 65%,
+                    var(--light_off_color) 100%
+                );
+            }
+            .lightFuck {
+                width: 15px;
+                height: 15px;
+                border-radius: 50%;
+                margin-left: 3px;
+                margin-right: 3px;
+                background: white;
+                position: center;
+            }
+            .lightBorder {
+                background-color: var(--light_border_color);
+                padding-top: 20px;
+                padding-bottom: 20px;
+                width: 117px;
+                height: 67px;
+                border-radius: 50%;
+            }
+        </style>
+        <script>
+            setTimeout(() => {
+                document.getElementById("light_1").className = "lightOn light"
+            }, 2000);
+        </script>
+    </head>
+    <body>
+        If you're feeling low and down,
+        <br/>
+        If you're feeling upside down,
+        <div class="lightBorder">
+            <table>
+                <tr>
+                    <td>
+                        <div class="lightFuck" />
+                    </td>
+                    <td>
+                        <div class="lightOff light" id="light_1" />
+                    </td>
+                    <td>
+                        <div class="lightFuck" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>
