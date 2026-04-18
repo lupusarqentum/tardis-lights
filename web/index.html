@@ -45,7 +45,7 @@
                 background-color: var(--light_border_color);
                 padding-top: 20px;
                 padding-bottom: 20px;
-                width: 117px;
+                width: 110px;
                 height: 67px;
                 border-radius: 50%;
             }
@@ -64,6 +64,18 @@
             .switch:checked + .switch_label {
                 background-image: url("switch_up.png");
             }
+            html, body {
+                height: 100%;
+                margin: 0;
+            }
+
+            body {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                background: coral;
+            }
         </style>
         <script>
             setTimeout(() => {
@@ -72,25 +84,62 @@
         </script>
     </head>
     <body>
-        If you're feeling low and down,
-        <br/>
-        If you're feeling upside down,
-        <div class="lightBorder">
-            <table>
-                <tr>
-                    <td>
-                        <div class="lightFuck">
-                    </td>
-                    <td>
-                        <div class="lightOff light" id="light_1">
-                    </td>
-                    <td>
-                        <div class="lightFuck">
-                    </td>
-                </tr>
-            </table>
+        <h1 style="text-align: center;"">TARDIS Lights Puzzle Simulator</h1>
+        <div style="display: flex; justify-content: center;">
+            <div>
+                <div class="lightBorder", style="display: flex; justify-content: center; align-items: center;">
+                    <div class="lightFuck"></div>
+                    <div class="lightOff light", id="light_0"></div>
+                    <div class="lightFuck"></div>
+                </div>
+            </div>
+            <div>
+                <div class="lightBorder", style="display: flex; justify-content: center; align-items: center;">
+                    <div class="lightFuck"></div>
+                    <div class="lightOff light", id="light_0"></div>
+                    <div class="lightFuck"></div>
+                </div>
+            </div>
+            <div>
+                <div class="lightBorder", style="display: flex; justify-content: center; align-items: center;">
+                    <div class="lightFuck"></div>
+                    <div class="lightOff light", id="light_0"></div>
+                    <div class="lightFuck"></div>
+                </div>
+            </div>
+            <div>
+                <div class="lightBorder", style="display: flex; justify-content: center; align-items: center;">
+                    <div class="lightFuck"></div>
+                    <div class="lightOff light", id="light_0"></div>
+                    <div class="lightFuck"></div>
+                </div>
+            </div>
+            <div>
+                <div class="lightBorder", style="display: flex; justify-content: center; align-items: center;">
+                    <div class="lightFuck"></div>
+                    <div class="lightOff light", id="light_0"></div>
+                    <div class="lightFuck"></div>
+                </div>
+            </div>
+            <div>
+                <div class="lightBorder", style="display: flex; justify-content: center; align-items: center;">
+                    <div class="lightFuck"></div>
+                    <div class="lightOff light", id="light_0"></div>
+                    <div class="lightFuck"></div>
+                </div>
+            </div>
         </div>
-        <input class="switch" type="checkbox" id="switch_1">
-        <label for="switch_1" class="switch_label"></label>
+        <div style="display: flex;  justify-content: center;">
+            <input class="switch" type="checkbox" id="switch_1">
+            <label for="switch_1" class="switch_label"></label>
+            <input class="switch" type="checkbox" id="switch_2">
+            <label for="switch_2" class="switch_label"></label>
+            <input class="switch" type="checkbox" id="switch_3">
+            <label for="switch_3" class="switch_label"></label>
+            <input class="switch" type="checkbox" id="switch_4">
+            <label for="switch_4" class="switch_label"></label>
+            <input class="switch" type="checkbox" id="switch_5">
+            <label for="switch_5" class="switch_label"></label>
+        </div>
     </body>
 </html>
