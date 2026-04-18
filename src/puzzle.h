@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdbool.h>
+
 #define SWITCH_COUNT 5
 #define LIGHT_COUNT 6
 
