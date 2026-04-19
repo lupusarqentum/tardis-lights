@@ -1,0 +1,1 @@
+clang --target=wasm32 -DSTDINT_MISSING -nostdlib -fno-builtin -Os -Wl,--allow-undefined-file=src/hal_wasm/imports.ld,--no-entry -I./include -o yiff.wasm src/hal_wasm/hal.c src/main_loop.c src/puzzle.c src/libc_subset.c
