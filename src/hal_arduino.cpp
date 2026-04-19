@@ -1,6 +1,7 @@
 #include <Arduino.h>
 
 #include "hal.h"
+#include "main_loop.h"
 #include "puzzle.h"
 
 #define ARDUINO_DIGITAL_PINS_COUNT 14
@@ -28,7 +29,7 @@ extern "C" void hal_log(const char* message) {
     Serial.print(message);
 }
 
-void start() {
+void setup() {
     for (int i = 0; i < SWITCH_COUNT; ++i) {
         pinMode(SWITCH_PIN(i), INPUT_PULLUP);
     }
