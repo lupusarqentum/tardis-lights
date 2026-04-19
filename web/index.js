@@ -61,14 +61,16 @@ function addSwitches(switchesContainerToAddCount) {
 
 // to be called from C
 function jsLog(message_pointer, message_length) {
-    console.log("Hello, World!\n")
+    const shit = new Uint8Array(instance.exports.memory.buffer, message_pointer, message_length)
+    const shit2 = new TextDecoder().decode(shit)
+    console.log(`fucking string ${shit2}`)
 }
 
 function handleSwitchToggle(_) {
-    wasm_instance.exports.loop()
+    if (instance != undefined) {
+        instance.exports.loop()
+    }
 }
-
-var wasm_instance = undefined
 
 async function init() {
     const imports = {
@@ -82,8 +84,8 @@ async function init() {
     };
 
     const { instance } = await WebAssembly.instantiateStreaming(fetch("./yiff.wasm"), imports);
+    globalThis.instance = instance
     instance.exports.setup()
-    wasm_instance = instance
 }
 
 init()
