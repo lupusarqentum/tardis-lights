@@ -21,14 +21,12 @@ void hal_log(const char* message) {
     jsLog((int)message, tl_strlen(message));
 }
 
-__attribute__((export_name("setup")))
-void setup(void) {
+__attribute__((export_name("setup"))) void setup(void) {
     jsAddLights(LIGHT_COUNT);
     jsAddSwitches(SWITCH_COUNT);
     main_loop();
 }
 
-__attribute__((export_name("loop")))
-void loop(void) {
+__attribute__((export_name("loop"))) void loop(void) {
     main_loop();
 }
