@@ -15,7 +15,7 @@
 #define OR(x, y) ((x) || (y))
 #define XOR(x, y) ((x) ^ (y))
 
-void puzzle_update(const bool switch_state[SWITCH_COUNT], bool light_state[LIGHT_COUNT]) {
+void puzzle_update(const tl_bool switch_state[SWITCH_COUNT], tl_bool light_state[LIGHT_COUNT]) {
     light_state[0] = AND(NOT(A7), B7);
     light_state[1] = AND(NOT(C7), NOT(D7));
     light_state[2] = E7;

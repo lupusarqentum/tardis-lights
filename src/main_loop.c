@@ -2,8 +2,8 @@
 #include "hal.h"
 #include "puzzle.h"
 
-static bool switch_state[SWITCH_COUNT];
-static bool light_state[LIGHT_COUNT];
+static tl_bool switch_state[SWITCH_COUNT];
+static tl_bool light_state[LIGHT_COUNT];
 
 static void input(void) {
     for (int i = 0; i < SWITCH_COUNT; ++i) {
@@ -12,7 +12,7 @@ static void input(void) {
 
     const char message_start[] = "Switch state just read: ";
     char buffer[sizeof(message_start) - 1 + SWITCH_COUNT + 2];
-    memcpy(buffer, message_start, sizeof(message_start) - 1);
+    tl_memcpy(buffer, message_start, sizeof(message_start) - 1);
     for (int i = 0; i < SWITCH_COUNT; ++i) {
         buffer[sizeof(message_start) - 1 + i] = switch_state[i] ? '1' : '0';
     }
@@ -32,7 +32,7 @@ static void render(void) {
 
     const char message_start[] = "Light state just rendered: ";
     char buffer[sizeof(message_start) - 1 + LIGHT_COUNT + 2];
-    memcpy(buffer, message_start, sizeof(message_start) - 1);
+    tl_memcpy(buffer, message_start, sizeof(message_start) - 1);
     for (int i = 0; i < LIGHT_COUNT; ++i) {
         buffer[sizeof(message_start) - 1 + i] = light_state[i] ? '1' : '0';
     }

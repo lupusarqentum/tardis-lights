@@ -1,22 +1,18 @@
 #include "libc_subset.h"
 
-#ifdef LIBC_ABSENT
-
-void* memcpy(void* dest, const void* src, int n) {
+void* tl_memcpy(void* dest, const void* src, size_t count) {
     char* dest_char = (char*)dest;
     char* src_char = (char*)src;
-    for (int i = 0; i < n; ++i) {
+    for (size_t i = 0; i < count; ++i) {
         dest_char[i] = src_char[i];
     }
     return dest;
 }
 
-int strlen(const char* s) {
-    int result = 0;
+size_t tl_strlen(const char* s) {
+    size_t result = 0;
     while (s[result] != '\0') {
         result++;
     }
     return result;
 }
-
-#endif // LIBC_ABSENT
