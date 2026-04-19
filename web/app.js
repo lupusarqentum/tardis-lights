@@ -7,14 +7,14 @@ const lights = []
 const switches = []
 
 // to be called from C
-function jsReadSwitch(switchNumber) {
+function readSwitch(switchNumber) {
     const switchToRead = switches[switchNumber]
     const switchInputElement = switchToRead.querySelector(".switch")
     return switchInputElement.checked
 }
 
 // to be called from C
-function jsSetLightState(lightNumber, value) {
+function setLightState(lightNumber, value) {
     const lightBase = lights[lightNumber]
     const light = lightBase.querySelector(".light")
     if (value == 1) {
@@ -29,7 +29,7 @@ function jsSetLightState(lightNumber, value) {
 }
 
 // to be called from C
-function jsAddLights(lightsContainerToAddCount) {
+function addLights(lightsContainerToAddCount) {
     for (var i = lightCount; i < lightCount + lightsContainerToAddCount; ++i) {
         const newLight = document.createElement("div")
         newLight.innerHTML = `
@@ -46,11 +46,11 @@ function jsAddLights(lightsContainerToAddCount) {
 }
 
 // to be called from C
-function jsAddSwitches(switchesContainerToAddCount) {
+function addSwitches(switchesContainerToAddCount) {
     for (var i = switchCount; i < switchCount + switchesContainerToAddCount; ++i) {
         const newSwitch = document.createElement("div")
         newSwitch.innerHTML = `
-            <input class="switch" type="checkbox" id="switch_${i}">
+            <input class="switch" type="checkbox" onchange="handleSwitchToggle(this)" id="switch_${i}">
             <label for="switch_${i}" class="switch_label"></label>
         `
         switchesContainer.appendChild(newSwitch)
@@ -59,16 +59,31 @@ function jsAddSwitches(switchesContainerToAddCount) {
     switchCount += switchesContainerToAddCount
 }
 
-jsAddLights(6)
-jsAddSwitches(5)
+// to be called from C
+function jsLog(message_pointer, message_length) {
+    console.log("Hello, World!\n")
+}
 
-setTimeout(() => {
-    jsSetLightState(0, 1)
-    jsSetLightState(2, 1)
-}, 1500)
+function handleSwitchToggle(_) {
+    wasm_instance.exports.loop()
+}
 
-setTimeout(() => {
-    const value = jsReadSwitch(2)
-    console.log(`switch state read: ${value}`)
-    jsSetLightState(2, 0)
-}, 4500)
+var wasm_instance = undefined
+
+async function init() {
+    const imports = {
+        env: {
+            jsReadSwitch: readSwitch,
+            jsSetLightState: setLightState,
+            jsAddLights: addLights,
+            jsAddSwitches: addSwitches,
+            jsLog: jsLog
+        }
+    };
+
+    const { instance } = await WebAssembly.instantiateStreaming(fetch("./yiff.wasm"), imports);
+    instance.exports.setup()
+    wasm_instance = instance
+}
+
+init()
