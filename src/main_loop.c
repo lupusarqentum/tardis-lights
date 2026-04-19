@@ -11,13 +11,13 @@ static void input(void) {
     }
 
     const char message_start[] = "Switch state just read: ";
-    char buffer[sizeof(message_start) + SWITCH_COUNT + 2];
-    memcpy(buffer, message_start, sizeof(message_start));
+    char buffer[sizeof(message_start) - 1 + SWITCH_COUNT + 2];
+    memcpy(buffer, message_start, sizeof(message_start) - 1);
     for (int i = 0; i < SWITCH_COUNT; ++i) {
-        buffer[sizeof(message_start) + i] = switch_state[i] ? '1' : '0';
+        buffer[sizeof(message_start) - 1 + i] = switch_state[i] ? '1' : '0';
     }
-    buffer[sizeof(message_start) + SWITCH_COUNT + 0] = '\n';
-    buffer[sizeof(message_start) + SWITCH_COUNT + 1] = '\0';
+    buffer[sizeof(message_start) - 1 + SWITCH_COUNT + 0] = '\n';
+    buffer[sizeof(message_start) - 1 + SWITCH_COUNT + 1] = '\0';
     hal_log(buffer);
 }
 
@@ -31,13 +31,13 @@ static void render(void) {
     }
 
     const char message_start[] = "Light state just rendered: ";
-    char buffer[sizeof(message_start) + LIGHT_COUNT + 2];
-    memcpy(buffer, message_start, sizeof(message_start));
+    char buffer[sizeof(message_start) - 1 + LIGHT_COUNT + 2];
+    memcpy(buffer, message_start, sizeof(message_start) - 1);
     for (int i = 0; i < LIGHT_COUNT; ++i) {
-        buffer[sizeof(message_start) + i] = light_state[i] ? '1' : '0';
+        buffer[sizeof(message_start) - 1 + i] = light_state[i] ? '1' : '0';
     }
-    buffer[sizeof(message_start) + LIGHT_COUNT + 0] = '\n';
-    buffer[sizeof(message_start) + LIGHT_COUNT + 1] = '\0';
+    buffer[sizeof(message_start) - 1 + LIGHT_COUNT + 0] = '\n';
+    buffer[sizeof(message_start) - 1 + LIGHT_COUNT + 1] = '\0';
     hal_log(buffer);
 }
 
