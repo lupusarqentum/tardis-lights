@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdbool.h>
+#include "libc_subset.h"
 
 #ifdef __cplusplus
 extern "C" {

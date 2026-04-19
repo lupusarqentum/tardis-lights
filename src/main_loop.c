@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include "libc_subset.h"
 #include "hal.h"
 #include "puzzle.h"
 
@@ -10,14 +10,14 @@ static void input(void) {
         switch_state[i] = hal_read(i);
     }
 
-    const char message_template[] = "Switch state just read: %s\n";
-    char read_line[SWITCH_COUNT + 1];
-    read_line[SWITCH_COUNT] = '\0';
-    char buffer[sizeof(read_line) + sizeof(message_template)];
+    const char message_start[] = "Switch state just read: ";
+    char buffer[sizeof(message_start) + SWITCH_COUNT + 2];
+    memcpy(buffer, message_start, sizeof(message_start));
     for (int i = 0; i < SWITCH_COUNT; ++i) {
-        read_line[i] = switch_state[i] ? '1' : '0';
+        buffer[sizeof(message_start) + i] = switch_state[i] ? '1' : '0';
     }
-    snprintf(buffer, sizeof(buffer), message_template, read_line);
+    buffer[sizeof(message_start) + SWITCH_COUNT + 0] = '\n';
+    buffer[sizeof(message_start) + SWITCH_COUNT + 1] = '\0';
     hal_log(buffer);
 }
 
@@ -30,14 +30,14 @@ static void render(void) {
         hal_write(i, light_state[i]);
     }
 
-    const char message_template[] = "Light state just rendered: %s\n";
-    char rendered_line[LIGHT_COUNT + 1];
-    rendered_line[LIGHT_COUNT] = '\0';
-    char buffer[sizeof(rendered_line) + sizeof(message_template)];
+    const char message_start[] = "Light state just rendered: ";
+    char buffer[sizeof(message_start) + LIGHT_COUNT + 2];
+    memcpy(buffer, message_start, sizeof(message_start));
     for (int i = 0; i < LIGHT_COUNT; ++i) {
-        rendered_line[i] = light_state[i] ? '1' : '0';
+        buffer[sizeof(message_start) + i] = light_state[i] ? '1' : '0';
     }
-    snprintf(buffer, sizeof(buffer), message_template, rendered_line);
+    buffer[sizeof(message_start) + LIGHT_COUNT + 0] = '\n';
+    buffer[sizeof(message_start) + LIGHT_COUNT + 1] = '\0';
     hal_log(buffer);
 }
 
