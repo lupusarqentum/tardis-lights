@@ -9,16 +9,16 @@ extern void jsAddLights(int);
 extern void jsAddSwitches(int);
 extern void jsLog(int, int);
 
-bool hal_read(int switch_number) {
+tl_bool hal_read(int switch_number) {
     return jsReadSwitch(switch_number) == 1;
 }
 
-void hal_write(int light_number, bool value) {
+void hal_write(int light_number, tl_bool value) {
     jsSetLightState(light_number, value ? 1 : 0);
 }
 
 void hal_log(const char* message) {
-    jsLog((int)message, strlen(message));
+    jsLog((int)message, tl_strlen(message));
 }
 
 __attribute__((export_name("setup")))
