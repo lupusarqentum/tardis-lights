@@ -1,0 +1,5 @@
+jsReadSwitch
+jsSetLightState
+jsAddLights
+jsAddSwitches
+jsLog
