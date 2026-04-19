@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdbool.h>
+#include "libc_subset.h"
 
 #define SWITCH_COUNT 5
 #define LIGHT_COUNT 6
