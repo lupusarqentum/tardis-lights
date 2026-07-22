@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: 0BSD
+# Copyright (C) 2026 Grigoriy Loboda
+
 SOURCES := 	hal.h 			\
 		hal_arduino.cpp		\
 		libc_subset.h		\

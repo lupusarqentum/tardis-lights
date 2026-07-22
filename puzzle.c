@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: 0BSD
+// Copyright (C) 2026 Grigoriy Loboda
+
 #include "puzzle.h"
 
 #if SWITCH_COUNT != 5 || LIGHT_COUNT != 6
