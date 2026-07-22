@@ -15,11 +15,13 @@
 #define OR(x, y) ((x) || (y))
 #define XOR(x, y) ((x) ^ (y))
 
-void puzzle_update(const tl_bool switch_state[SWITCH_COUNT], tl_bool light_state[LIGHT_COUNT]) {
-    light_state[0] = AND(NOT(A7), B7);
-    light_state[1] = AND(NOT(C7), NOT(D7));
-    light_state[2] = E7;
-    light_state[3] = AND(B7, E7);
-    light_state[4] = AND(NOT(A7), NOT(D7));
-    light_state[5] = XOR(B7, C7);
+void puzzle_update(const tl_bool switch_state[SWITCH_COUNT],
+		   tl_bool light_state[LIGHT_COUNT])
+{
+	light_state[0] = AND(NOT(A7), B7);
+	light_state[1] = AND(NOT(C7), NOT(D7));
+	light_state[2] = E7;
+	light_state[3] = AND(B7, E7);
+	light_state[4] = AND(NOT(A7), NOT(D7));
+	light_state[5] = XOR(B7, C7);
 }

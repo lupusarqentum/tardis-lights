@@ -17,24 +17,28 @@ static const int LIGHT_PINS_OFFSET = SWITCH_PINS_OFFSET + SWITCH_COUNT;
 #define LIGHT_PIN(x) ((x) + LIGHT_PINS_OFFSET)
 #define SWITCH_PIN(x) ((x) + SWITCH_PINS_OFFSET)
 
-extern "C" tl_bool hal_read(int switch_number) {
-    return digitalRead(SWITCH_PIN(switch_number)) == LOW;
+extern "C" tl_bool hal_read(int switch_number)
+{
+	return digitalRead(SWITCH_PIN(switch_number)) == LOW;
 }
 
-extern "C" void hal_write(int light_number, tl_bool value) {
-    digitalWrite(LIGHT_PIN(light_number), value ? HIGH : LOW)
+extern "C" void hal_write(int light_number, tl_bool value)
+{
+	digitalWrite(LIGHT_PIN(light_number), value ? HIGH : LOW)
 }
 
-void setup() {
-    for (int i = 0; i < SWITCH_COUNT; ++i) {
-        pinMode(SWITCH_PIN(i), INPUT_PULLUP);
-    }
-    for (int i = 0; i < LIGHT_COUNT; ++i) {
-        pinMode(LIGHT_PIN(i), OUTPUT);
-    }
+void setup()
+{
+	for (int i = 0; i < SWITCH_COUNT; ++i) {
+		pinMode(SWITCH_PIN(i), INPUT_PULLUP);
+	}
+	for (int i = 0; i < LIGHT_COUNT; ++i) {
+		pinMode(LIGHT_PIN(i), OUTPUT);
+	}
 }
 
-void loop() {
-    main_loop();
-    delay(750);
+void loop()
+{
+	main_loop();
+	delay(750);
 }
