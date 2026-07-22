@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "libc_subset.h"
+#include "defs.h"
 
 #define SWITCH_COUNT 5
 #define LIGHT_COUNT 6

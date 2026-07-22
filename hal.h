@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "libc_subset.h"
+#include "defs.h"
 
 #ifdef __cplusplus
 extern "C" {

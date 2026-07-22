@@ -3,7 +3,6 @@
 
 #include <Arduino.h>
 
-#include "hal.h"
 #include "main_loop.h"
 #include "puzzle.h"
 
