@@ -2,3 +2,4 @@
 **.wasm
 # binary data
 *.o
+a.out

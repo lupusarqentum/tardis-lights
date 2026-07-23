@@ -2,10 +2,9 @@
 # Copyright (C) 2026 Grigoriy Loboda
 
 SOURCES := 	hal.h 			\
-		hal_arduino.cpp		\
-		libc_subset.h		\
-		main_loop.c		\
-		main_loop.h		\
+		hal.c			\
+		defs.h			\
+		main.c			\
 		puzzle.c		\
 		puzzle.h
 
