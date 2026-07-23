@@ -16,7 +16,7 @@ SIZE 	:= avr-size --format=sysv
 CC 	:= avr-gcc
 
 CFLAGS := 	-mmcu="$(DEVICE)" -DF_CPU=$(FREQUENCY) \
-		-O3 -Wall -Wextra -Wpedantic -Werror -std=c23
+		-O3 -Wall -Wextra -Wpedantic -Werror -std=c11
 
 CLANG_FORMAT := clang-format
 CLANG_FORMAT_OPTIONS := --Werror
