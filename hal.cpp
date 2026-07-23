@@ -3,30 +3,35 @@
 
 #include <Arduino.h>
 
+#include "hal.h"
 #include "main_loop.h"
-#include "puzzle.h"
 
 #define ARDUINO_DIGITAL_PINS_COUNT 14
-#define RESERVED_PINS_COUNT 2
 
-static const int SWITCH_PINS_OFFSET = RESERVED_PINS_COUNT;
-static const int LIGHT_PINS_OFFSET = SWITCH_PINS_OFFSET + SWITCH_COUNT;
+#define MAPPED_SWITCH_COUNT 6
+#define MAPPED_LIGHT_COUNT 6
 
-#if SWITCH_COUNT + LED_COUNT + RESERVED_PINS_COUNT > ARDUINO_DIGITAL_PINS_COUNT
-#error "Won't be able to allocate required number of digital pins!"
-#endif
+static const int SWITCH_PINS_OFFSET = 2;
+static const int LIGHT_PINS_OFFSET = SWITCH_PINS_OFFSET + MAPPED_SWITCH_COUNT;
 
 #define LIGHT_PIN(x) ((x) + LIGHT_PINS_OFFSET)
 #define SWITCH_PIN(x) ((x) + SWITCH_PINS_OFFSET)
 
-extern "C" tl_bool hal_read(int switch_number)
+extern "C" u8 hal_read(void)
 {
-	return digitalRead(SWITCH_PIN(switch_number)) == LOW;
+        u8 result = 0;
+
+        for (signed char i = 0; i < 6; i++) {
+                result |= digitalRead(SWITCH_PIN(i) == LOW) >> i;
+        }
+        return result;
 }
 
-extern "C" void hal_write(int light_number, tl_bool value)
+extern "C" void hal_write(u8 light_state)
 {
-	digitalWrite(LIGHT_PIN(light_number), value ? HIGH : LOW)
+        for (signed char i = 0; i < 6; i++) {
+                digitalWrite(LIGHT_PIN(i), light_state >> i ? HIGH : LOW);
+        }
 }
 
 void setup()
