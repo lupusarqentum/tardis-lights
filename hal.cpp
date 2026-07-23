@@ -34,7 +34,12 @@ extern "C" void hal_write(u8 light_state)
         }
 }
 
-void setup()
+void hal_delay(int ms)
+{
+        delay(ms);
+}
+
+void hal_setup()
 {
 	for (int i = 0; i < SWITCH_COUNT; ++i) {
 		pinMode(SWITCH_PIN(i), INPUT_PULLUP);
@@ -44,8 +49,12 @@ void setup()
 	}
 }
 
+void setup()
+{
+        hal_setup();
+}
+
 void loop()
 {
 	main_loop();
-	delay(750);
 }

@@ -12,4 +12,5 @@ void main_loop(void)
         switch_state = hal_read();
         light_state = puzzle_update(switch_state);
         hal_write(light_state);
+        hal_delay(750);
 }
