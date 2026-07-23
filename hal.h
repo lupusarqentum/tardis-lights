@@ -3,16 +3,14 @@
 
 #pragma once
 
-#include "defs.h"
-
 /* initialize hardware */
 void hal_setup(void);
 
 /* sleep for given delay in ms */
-void hal_delay(u8 delay);
+void hal_delay(unsigned char delay);
 
 /* read switches state and return it as u8 */
-u8 hal_read(void);
+unsigned char hal_read(void);
 
 /* receive and show u8 representing 8 lights state  */
-void hal_write(u8 light_state);
+void hal_write(unsigned char light_state);

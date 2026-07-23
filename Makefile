@@ -3,7 +3,6 @@
 
 SOURCES := 	hal.h 			\
 		hal.c			\
-		defs.h			\
 		main.c			\
 		puzzle.c		\
 		puzzle.h

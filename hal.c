@@ -18,19 +18,19 @@ void hal_setup(void)
 	PORTD = 0;
 }
 
-void hal_delay(u8 delay)
+void hal_delay(unsigned char delay)
 {
 	while (delay--)
 		_delay_ms(1);
 }
 
-u8 hal_read(void)
+unsigned char hal_read(void)
 {
-	u8 result = PIND;
+	unsigned char result = PIND;
 	return (result >> 2) & 0x1F;
 }
 
-void hal_write(u8 light_state)
+void hal_write(unsigned char light_state)
 {
 	light_state = (light_state & 0x3F) << 1;
 	PORTC = light_state;
