@@ -14,11 +14,11 @@
 #define OR(x, y) ((x) || (y))
 #define XOR(x, y) ((x) ^ (y))
 
-u8 puzzle_update(u8 input)
+unsigned char puzzle_update(unsigned char input)
 {
-        u8 result = 0;
-        u8 switch_state[5];
-        u8 light_state[6];
+        unsigned char result = 0;
+        unsigned char switch_state[5];
+        unsigned char light_state[6];
 
         light_state[0] = AND(NOT(A7), B7);
 	light_state[1] = AND(NOT(C7), NOT(D7));
