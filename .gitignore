@@ -3,3 +3,5 @@
 # binary data
 *.o
 a.out
+*.elf
+*.hex
