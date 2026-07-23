@@ -1,0 +1,17 @@
+name: build and check
+
+on: [push, pull_request]
+
+jobs:
+  build-and-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-avr avr-libc binutils-avr make clang-format
+      - name: Check and build the project
+        run: make build # this checks and builds the project
