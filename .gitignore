@@ -1,2 +1,4 @@
 # WASM binaries
 **.wasm
+# binary data
+*.o
