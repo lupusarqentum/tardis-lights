@@ -3,6 +3,8 @@
 
 #pragma once
 
+typedef unsigned char u8;
+
 typedef int tl_bool;
 
 #define true 1

@@ -6,12 +6,10 @@
 #include "defs.h"
 
 #ifdef __cplusplus
-extern "C" {
-#endif // __cplusplus
+#define externC extern "C"
+#else
+#define externC
+#endif
 
-tl_bool hal_read(int switch_number);
-void hal_write(int light_number, tl_bool value);
-
-#ifdef __cplusplus
-}
-#endif // __cplusplus
+externC u8 hal_read(void);
+externC void hal_write(u8 light_state);

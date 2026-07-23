@@ -5,8 +5,5 @@
 
 #include "defs.h"
 
-#define SWITCH_COUNT 5
-#define LIGHT_COUNT 6
-
-void puzzle_update(const tl_bool switch_state[SWITCH_COUNT],
-		   tl_bool light_state[LIGHT_COUNT]);
+/* calculate appropriate lights state from switches state */
+u8 puzzle_update(u8 switch_state);
