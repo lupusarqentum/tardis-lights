@@ -7,7 +7,7 @@
 void hal_setup(void);
 
 /* sleep for given delay in ms */
-void hal_delay(unsigned char delay);
+void hal_delay(unsigned char milli);
 
 /* read switches state and return it as u8 */
 unsigned char hal_read(void);
