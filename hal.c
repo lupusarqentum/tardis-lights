@@ -18,9 +18,9 @@ void hal_setup(void)
 	PORTD = 0;
 }
 
-void hal_delay(unsigned char delay)
+void hal_delay(unsigned char milli)
 {
-	while (delay--)
+	while (milli--)
 		_delay_ms(1);
 }
 
