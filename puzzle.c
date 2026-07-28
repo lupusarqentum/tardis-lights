@@ -59,5 +59,8 @@ static inline unsigned char puzzle_formulae_v2(unsigned char switch_state)
 
 unsigned char puzzle_update(unsigned char switch_state)
 {
+	if (switch_state == 0)
+		return 0;
+
 	return puzzle_formulae_v2(switch_state);
 }
