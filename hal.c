@@ -33,6 +33,7 @@ void hal_delay(unsigned char milli)
 unsigned char hal_read(void)
 {
 	unsigned char result = PIND;
+	// note ~ operator; it is here because of pull up resistors being used
 	result = (~(result >> 2)) & 0x1F;
 	return result;
 }
