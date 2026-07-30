@@ -15,3 +15,10 @@ jobs:
           sudo apt-get install -y gcc-avr avr-libc binutils-avr make clang-format
       - name: Check and build the project
         run: make # this checks and builds the project
+      - name: Generate size report
+        run: make -s size > size_report.txt
+      - name: Upload size report
+        uses: actions/upload-artifact@v7
+        with:
+          path: size_report.txt
+          archive: false

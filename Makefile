@@ -19,7 +19,7 @@ SOURCES := hal.c puzzle.c main.c
 
 AVRDUDE	:= avrdude
 RM 	:= rm -f
-SIZE 	:= avr-size --format=sysv
+SIZE 	:= avr-size --format=berkeley
 CC 	:= avr-gcc
 OBJCOPY	:= avr-objcopy
 
