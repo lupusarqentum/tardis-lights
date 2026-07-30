@@ -14,6 +14,7 @@ FREQUENCY		:= 16000000UL
 
 HEADERS := hal.h puzzle.h
 SOURCES := hal.c puzzle.c main.c
+OBJECTS := hal.o puzzle.o main.o
 
 # variables below probably don't need to be changed
 
@@ -39,7 +40,7 @@ all: check build size
 
 PHONY += clean
 clean:
-	$(RM) $(TARGET_ELF) $(TARGET_HEX)
+	$(RM) $(TARGET_ELF) $(TARGET_HEX) $(OBJECTS)
 
 PHONY += build
 build: $(TARGET_HEX)
@@ -66,8 +67,11 @@ clang-format-fix:
 $(TARGET_HEX): $(TARGET_ELF)
 	$(OBJCOPY) $(OBJCOPY_OPTIONS) $(TARGET_ELF) $(TARGET_HEX)
 
-$(TARGET_ELF): $(SOURCES) $(HEADERS)
-	$(CC) $(CFLAGS) $(SOURCES) -o $(TARGET_ELF)
+$(TARGET_ELF): $(OBJECTS)
+	$(CC) $(CFLAGS) $(OBJECTS) -o $(TARGET_ELF)
+
+%.o: %.c $(HEADERS)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 PHONY += help
 help:
