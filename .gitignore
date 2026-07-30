@@ -1,7 +1,11 @@
 # WASM binaries
 **.wasm
+
 # binary data
 *.o
 a.out
 *.elf
 *.hex
+
+# compilation database
+compile_commands.json
