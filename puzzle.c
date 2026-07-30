@@ -57,10 +57,16 @@ static inline unsigned char puzzle_formulae_v2(unsigned char switch_state)
 	return result;
 }
 
+/* intended for testing purposes */
+static inline unsigned char puzzle_formulae_mirror(unsigned char switch_state)
+{
+	return switch_state;
+}
+
 unsigned char puzzle_update(unsigned char switch_state)
 {
 	if (switch_state == 0)
 		return 0;
 
-	return puzzle_formulae_v2(switch_state);
+	return puzzle_formulae_v1(switch_state);
 }
