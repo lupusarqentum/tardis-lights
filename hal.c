@@ -8,14 +8,20 @@
 
 void hal_setup(void)
 {
-	// we are using PC1..PC5 for switches (5 switches are mapped)
-	// and PD2..PD7 for lights (6 lights are mapped)
-	// other pins are unused
+	// switches:  D2  D3  D4  D5  D6 (5 items, all internally pulled up)
+	//           PD2 PD3 PD4 PD5 PD6
+	// lights:  A0,  A1,  A2,  A3,  A4,  A5 (6 items)
+	//         PC0, PC1, PC2, PC3, PC4, PC5
+	// for an additional external pull up D12 (PB4) is driven high
 
-	DDRC = 0;
-	DDRD = 0xFF;
-	PORTC = 0xFF;
-	PORTD = 0;
+	DDRC |= 0x3F;
+	PORTC &= ~0x3F;
+
+	DDRB |= (1 << 4);
+	PORTB |= (1 << 4);
+
+	DDRD &= ~0x7C;
+	PORTD |= 0x7C;
 }
 
 void hal_delay(unsigned char milli)
@@ -27,11 +33,11 @@ void hal_delay(unsigned char milli)
 unsigned char hal_read(void)
 {
 	unsigned char result = PIND;
-	return (result >> 2) & 0x1F;
+	result = (~(result >> 2)) & 0x1F;
+	return result;
 }
 
 void hal_write(unsigned char light_state)
 {
-	light_state = (light_state & 0x3F) << 1;
-	PORTC = light_state;
+	PORTC = (PORTC & ~0x3F) | (light_state & 0x3F);
 }
