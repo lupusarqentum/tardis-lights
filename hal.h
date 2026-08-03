@@ -14,3 +14,6 @@ unsigned char hal_read(void);
 
 /* receive and show u8 representing 8 lights state  */
 void hal_write(unsigned char light_state);
+
+/* start consuming transmission of bytes from print buffer */
+void hal_start_print_buffer_transmission(void);
