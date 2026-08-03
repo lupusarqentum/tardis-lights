@@ -6,10 +6,10 @@
 #define PR_BUF_SIZE 128
 #define RING_INC(x) (x = (x + 1) % PR_BUF_SIZE)
 
-char pr_buf[PR_BUF_SIZE];
+static char pr_buf[PR_BUF_SIZE];
 
-unsigned char write_index;
-unsigned char read_index;
+static unsigned char write_index;
+static unsigned char read_index;
 
 void pr_char(char c)
 {
@@ -39,7 +39,7 @@ unsigned char pr_empty(void)
 	return read_index == write_index;
 }
 
-char hex_digits[] = "0123456789ABCDEF";
+static char hex_digits[] = "0123456789ABCDEF";
 
 void pr_hex(unsigned char value)
 {
