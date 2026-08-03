@@ -12,9 +12,9 @@ PROGRAMMER		:= arduino
 AVRDUDE_BAUDRATE	:= 115200
 FREQUENCY		:= 16000000UL
 
-HEADERS := hal.h puzzle.h
-SOURCES := hal.c puzzle.c main.c
-OBJECTS := hal.o puzzle.o main.o
+HEADERS := print.h hal.h puzzle.h
+SOURCES := print.c hal.c puzzle.c main.c
+OBJECTS := print.o hal.o puzzle.o main.o
 
 # variables below probably don't need to be changed
 
