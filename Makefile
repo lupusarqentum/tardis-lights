@@ -25,7 +25,7 @@ CC 	:= avr-gcc
 OBJCOPY	:= avr-objcopy
 
 CFLAGS := 		-mmcu="$(DEVICE)" -DF_CPU=$(FREQUENCY) \
-			-O3 -Wall -Wextra -Wpedantic -Werror -std=c11
+			-Os -Wall -Wextra -Wpedantic -Werror -std=c11
 AVRDUDE_OPTIONS :=	-P $(PORT) -v -p$(DEVICE) -c$(PROGRAMMER) -b$(AVRDUDE_BAUDRATE) -D -Uflash:w:$(TARGET_HEX):i
 OBJCOPY_OPTIONS :=	-j .text -j .data -O ihex
 
