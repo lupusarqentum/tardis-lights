@@ -20,6 +20,8 @@ void hal_setup(void)
 	// lights:  A0,  A1,  A2,  A3,  A4,  A5 (6 items)
 	//         PC0, PC1, PC2, PC3, PC4, PC5
 	// for an additional external pull up D12 (PB4) is driven high
+	// builtin LED at D13 (PB5) blinks occasionally for debugging purposes
+	//     (it indicates that the program is alive)
 
 	// switches
 
@@ -36,6 +38,11 @@ void hal_setup(void)
 	DDRB |= (1 << 4);
 	PORTB |= (1 << 4);
 
+	// builtin LED
+
+	DDRB |= (1 << PB5);
+	PORTB &= ~(1 << PB5);
+
 	cli();
 
 	// USART0 is used for printing (print.h)
@@ -51,6 +58,11 @@ void hal_setup(void)
 	UCSR0B = (1 << TXEN0);			   // transmitter enabled
 	UCSR0C = (0 << UMSEL00) | (0 << UMSEL01) | // asynchronous mode
 		 (1 << UCSZ01) | (1 << UCSZ00);	   // 8data
+
+	// timer 1 (builtin led blink)
+	TCCR1A = 0;
+	TCCR1B = (0 << CS12) | (1 << CS11) | (1 << CS10);
+	TIMSK1 = (1 << TOIE1);
 
 	sei();
 }
@@ -91,4 +103,9 @@ ISR(USART_UDRE_vect)
 		// disable UDRE interrupt
 		UCSR0B &= ~(1 << UDRIE0);
 	}
+}
+
+ISR(TIMER1_OVF_vect)
+{
+	PINB |= (1 << PB5);
 }
