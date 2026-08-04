@@ -7,10 +7,10 @@ TARGET_HEX	:= $(TARGET).hex
 
 PORT := /dev/ttyUSB0
 
-DEVICE			:= atmega328p
-PROGRAMMER		:= arduino
-AVRDUDE_BAUDRATE	:= 115200
-FREQUENCY		:= 16000000UL
+DEVICE		:= atmega328p
+PGM		:= arduino
+PGM_BAUD	:= 115200
+FREQUENCY	:= 16000000UL
 
 HEADERS := print.h hal.h puzzle.h
 SOURCES := print.c hal.c puzzle.c main.c
@@ -26,7 +26,7 @@ OBJCOPY	:= avr-objcopy
 
 CFLAGS := 		-mmcu="$(DEVICE)" -DF_CPU=$(FREQUENCY) \
 			-Os -Wall -Wextra -Wpedantic -Werror -std=c11
-AVRDUDE_OPTIONS :=	-P $(PORT) -v -p$(DEVICE) -c$(PROGRAMMER) -b$(AVRDUDE_BAUDRATE) -D -Uflash:w:$(TARGET_HEX):i
+AVRDUDE_OPTIONS :=	-P $(PORT) -v -p$(DEVICE) -c$(PGM) -b$(PGM_BAUD) -D -Uflash:w:$(TARGET_HEX):i
 OBJCOPY_OPTIONS :=	-j .text -j .data -O ihex
 
 CLANG_FORMAT			:= clang-format
@@ -93,9 +93,11 @@ help:
 	@echo "                       defaulted to: $(FREQUENCY)"
 	@echo "  PORT             - avrdude port option"
 	@echo "                       defaulted to: $(PORT)"
-	@echo "  PROGRAMMER       - avrdude programmer option"
-	@echo "                       defaulted to: $(PROGRAMMER)"
-	@echo "  AVRDUDE_BAUDRATE - avrdude baud option"
-	@echo "                       defaulted to: $(AVRDUDE_BAUDRATE)"
+	@echo "  PGM              - avrdude programmer option"
+	@echo "                       defaulted to: $(PGM)"
+	@echo "  PGM_BAUD         - avrdude baud option"
+	@echo "                       defaulted to: $(PGM_BAUD)"
+	@echo "  AVRDUDE_OPTIONS  - avrdude options"
+	@echo "                       defaulted to: $(AVRDUDE_OPTIONS)"
 
 .PHONY: $(PHONY)
