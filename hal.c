@@ -19,7 +19,6 @@ void hal_setup(void)
 	//           PD2 PD3 PD4 PD5 PD6
 	// lights:  A0,  A1,  A2,  A3,  A4,  A5 (6 items)
 	//         PC0, PC1, PC2, PC3, PC4, PC5
-	// for an additional external pull up D12 (PB4) is driven high
 	// builtin LED at D13 (PB5) blinks occasionally for debugging purposes
 	//     (it indicates that the program is alive)
 
@@ -32,11 +31,6 @@ void hal_setup(void)
 
 	DDRC |= 0x3F;
 	PORTC &= ~0x3F;
-
-	// external pull up PB4
-
-	DDRB |= (1 << 4);
-	PORTB |= (1 << 4);
 
 	// builtin LED
 
