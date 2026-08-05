@@ -2,7 +2,6 @@
 // Copyright (C) 2026 Grigoriy Loboda
 
 #include <avr/io.h>
-#include <stdint.h>
 
 #include "hal.h"
 #include "print.h"
@@ -12,11 +11,11 @@
 static void test_lights_wiring(void)
 {
 	/* blink all LEDs to check that they are wired */
-	for (unsigned char i = 4; i--;) {
+	for (unsigned char i = 2; i--;) {
 		hal_write(0xFF);
-		hal_delay(150);
+		hal_delay(200);
 		hal_write(0);
-		hal_delay(150);
+		hal_delay(200);
 	}
 
 	/* blink all LEDs separately to check that no LEDs are intermixed */
@@ -24,11 +23,19 @@ static void test_lights_wiring(void)
 		unsigned char light_state = 1 << i;
 
 		hal_write(light_state);
-		hal_delay(150);
+		hal_delay(200);
+	}
+
+	for (unsigned char i = 0; i < 8; i++) {
+		unsigned char light_state = ~(1 << i);
+
+		hal_write(light_state);
+		hal_delay(250);
 	}
 }
 
-static void log_states(unsigned char time, unsigned char switches, unsigned char lights)
+static void log_states(unsigned char time, unsigned char switches,
+		       unsigned char lights)
 {
 	pr_string("0x");
 	pr_hex(time);
@@ -57,7 +64,8 @@ int main(void)
 			input_changes_count++;
 			light_state = puzzle_update(switch_state);
 			hal_write(light_state);
-			log_states(input_changes_count, switch_state, light_state);
+			log_states(input_changes_count, switch_state,
+				   light_state);
 			hal_start_print_buffer_transmission();
 		} else {
 			light_state = prev_light;
