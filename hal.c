@@ -78,6 +78,13 @@ void hal_setup(void)
 	TCCR1B = (0 << CS12) | (1 << CS11) | (1 << CS10);
 	TIMSK1 = (1 << TOIE1);
 
+	// pin change interrupts on input pins
+	// inputs PD2..PD6 correspond to PCINT18..PCINT22
+
+	PCICR = (1 << PCIE2);
+	PCMSK2 = (1 << PCINT18) | (1 << PCINT19) | (1 << PCINT20) |
+		 (1 << PCINT21) | (1 << PCINT22);
+
 	sei();
 }
 
@@ -127,6 +134,12 @@ ISR(USART_UDRE_vect)
 		// disable UDRE interrupt
 		UCSR0B &= ~(1 << UDRIE0);
 	}
+}
+
+ISR(PCINT2_vect)
+{
+	pr_string("Pin change detected!\n");
+	hal_start_print_buffer_transmission();
 }
 
 ISR(TIMER1_OVF_vect)
