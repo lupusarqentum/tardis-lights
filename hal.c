@@ -8,10 +8,21 @@
 #include "print.h"
 #include "hal.h"
 
+/* if bigger MCU will transition one state of lights into another faster */
+/* (smooth transitions) */
+/* set to high values for instant transitions (e.g. 1000) */
+#define PWM_TRANS_SPEED 12
+
+/* baud rate for logger */
 #ifndef BAUD
 #define BAUD 9600
 #endif
 #include <util/setbaud.h>
+
+static unsigned char light_state_current;
+static unsigned char light_state_prev;
+static unsigned char trans_level;
+static unsigned char pwm_counter;
 
 void hal_setup(void)
 {
@@ -37,6 +48,10 @@ void hal_setup(void)
 	DDRB |= (1 << PB5);
 	PORTB &= ~(1 << PB5);
 
+	light_state_current = 0;
+	light_state_prev = light_state_current;
+	trans_level = 255;
+
 	cli();
 
 	// USART0 is used for printing (print.h)
@@ -52,6 +67,11 @@ void hal_setup(void)
 	UCSR0B = (1 << TXEN0);			   // transmitter enabled
 	UCSR0C = (0 << UMSEL00) | (0 << UMSEL01) | // asynchronous mode
 		 (1 << UCSZ01) | (1 << UCSZ00);	   // 8data
+
+	// timer 0 (PWM in software)
+
+	TCCR0A = 0;
+	TCCR0B = (0 << CS02) | (0 << CS01) | (1 << CS00);
 
 	// timer 1 (builtin led blink)
 	TCCR1A = 0;
@@ -76,9 +96,19 @@ unsigned char hal_read(void)
 	return result;
 }
 
-void hal_write(unsigned char light_state)
+static void hal_write_internal(unsigned char light_state)
 {
 	PORTC = (PORTC & ~0x3F) | (light_state & 0x3F);
+}
+
+void hal_write(unsigned char light_state)
+{
+	if (light_state != light_state_current) {
+		light_state_prev = light_state_current;
+		light_state_current = light_state;
+		trans_level = 0;
+		TIMSK0 |= (1 << TOIE0);
+	}
 }
 
 void hal_start_print_buffer_transmission(void)
@@ -101,5 +131,33 @@ ISR(USART_UDRE_vect)
 
 ISR(TIMER1_OVF_vect)
 {
-	PINB |= (1 << PB5);
+	PINB = (1 << PB5);
+}
+
+#define PWM_TRANS_STEP_WIDE (16000000UL / F_CPU * PWM_TRANS_SPEED)
+#define PWM_TRANS_STEP                                                         \
+	(PWM_TRANS_STEP_WIDE >= 255                                            \
+	     ? 255                                                             \
+	     : (PWM_TRANS_STEP_WIDE == 0                                       \
+		    ? 1                                                        \
+		    : (unsigned char)PWM_TRANS_STEP_WIDE))
+
+ISR(TIMER0_OVF_vect)
+{
+	pwm_counter++;
+	if (pwm_counter == 0) {
+		const unsigned char step = PWM_TRANS_STEP;
+
+		trans_level =
+		    trans_level < 255 - step ? trans_level + step : 255;
+		if (trans_level == 255) {
+			hal_write_internal(light_state_current);
+			TIMSK0 &= ~(1 << TOIE0);
+			return;
+		}
+	}
+	if (pwm_counter < trans_level)
+		hal_write_internal(light_state_current);
+	else
+		hal_write_internal(light_state_prev);
 }
