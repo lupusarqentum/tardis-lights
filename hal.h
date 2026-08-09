@@ -9,6 +9,9 @@ void hal_setup(void);
 /* sleep for given delay in ms */
 void hal_delay(unsigned char milli);
 
+/* wait until any switch changes state, possibly saving energy */
+void hal_sleep_until_switch_change(void);
+
 /* read switches state and return it as u8 */
 unsigned char hal_read(void);
 
