@@ -54,6 +54,9 @@ int main(void)
 
 	hal_setup();
 
+	pr_string("Running lights wiring selftest!\n");
+	hal_start_print_buffer_transmission();
+
 	test_lights_wiring();
 
 	while (1) {
