@@ -9,7 +9,7 @@ PORT := /dev/ttyUSB0
 
 DEVICE		:= atmega328p
 PGM		:= arduino
-PGM_BAUD	:= 115200
+PGM_BAUD	:= 57600
 FREQUENCY	:= 16000000UL
 
 HEADERS := print.h hal.h puzzle.h
