@@ -40,7 +40,7 @@ static void log_states(unsigned char time, unsigned char switches,
 	pr_string("0x");
 	pr_hex(time);
 	pr_string(" ");
-	pr_string("New state detected SW: ");
+	pr_string("New state SW: ");
 	pr_binary(switches);
 	pr_string(" LED: ");
 	pr_binary(lights);
@@ -79,7 +79,7 @@ int main(void)
 
 		hal_delay(10);
 		hal_sleep_until_switch_change();
-		pr_string("Wake up the wicked!\n");
+		pr_string("Wake up!\n");
 		hal_start_print_buffer_transmission();
 	}
 }
