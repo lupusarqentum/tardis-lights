@@ -79,7 +79,7 @@ int main(void)
 
 		hal_delay(10);
 		hal_sleep_until_switch_change();
-		pr_string("Wake up!\n");
+		pr_string("Up!\n");
 		hal_start_print_buffer_transmission();
 	}
 }
