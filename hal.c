@@ -16,7 +16,9 @@
 // if bigger MCU will transition one state of lights into another faster
 // (smooth transitions)
 // set to higher values (e.g. 1000) for more instant-like transitions
+#ifndef PWM_TRANS_SPEED
 #define PWM_TRANS_SPEED 12
+#endif
 
 /* baud rate for logging (see also: print.h) */
 #ifndef BAUD
