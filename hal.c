@@ -44,14 +44,20 @@ static unsigned char is_sleep_inhibited(void)
 
 static void setup_lights(void);
 
+static const unsigned char LIGHT_MASK =
+    (1 << PC0) | (1 << PC1) | (1 << PC2) | (1 << PC3) | (1 << PC4) | (1 << PC5);
+static const unsigned char SWITCH_MASK =
+    (1 << PD2) | (1 << PD3) | (1 << PD4) | (1 << PD5) | (1 << PD6);
+static const unsigned char SWITCH_SHIFT = 2;
+
 void hal_setup(void)
 {
 	cli();
 
 	// switches: PD2 PD3 PD4 PD5 PD6 (5 items, internally pulled up)
 
-	DDRD &= ~0x7C;
-	PORTD |= 0x7C;
+	DDRD &= ~SWITCH_MASK;
+	PORTD |= SWITCH_MASK;
 
 	// pin change interrupts on switches pins
 
@@ -90,10 +96,8 @@ static inline void hal_write_internal(unsigned char light_state);
 
 static void setup_lights(void)
 {
-	// lights: PC0, PC1, PC2, PC3, PC4, PC5 (6 items)
-
-	DDRC |= 0x3F;
-	PORTC &= ~0x3F;
+	DDRC |= LIGHT_MASK;
+	PORTC &= ~LIGHT_MASK;
 
 	// timer 0 (PWM in software)
 	TCCR0A = 0;
@@ -111,7 +115,7 @@ static void setup_lights(void)
 
 static inline void hal_write_internal(unsigned char light_state)
 {
-	PORTC = (PORTC & ~0x3F) | (light_state & 0x3F);
+	PORTC = (PORTC & ~LIGHT_MASK) | (light_state & LIGHT_MASK);
 }
 
 void hal_write(unsigned char light_state)
@@ -186,7 +190,7 @@ unsigned char hal_read(void)
 	unsigned char result = PIND;
 
 	// note ~ operator (internal pullups)
-	result = (~(result >> 2)) & 0x1F;
+	result = (~(result | (~SWITCH_MASK))) >> SWITCH_SHIFT;
 	return result;
 }
 
