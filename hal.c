@@ -27,7 +27,6 @@
 static volatile unsigned char light_state_current;
 static volatile unsigned char light_state_prev;
 static volatile unsigned char trans_level;
-static volatile unsigned char pwm_counter;
 
 static volatile unsigned char has_input_changed;
 
@@ -43,26 +42,26 @@ static unsigned char is_sleep_inhibited(void)
 	return !sleep_inhibitors.timers && !sleep_inhibitors.uart;
 }
 
+static void setup_lights(void);
+
 void hal_setup(void)
 {
-	// switches: PD2 PD3 PD4 PD5 PD6 (5 items, internally pulled up)
-	// lights: PC0, PC1, PC2, PC3, PC4, PC5 (6 items)
+	cli();
 
-	// switches
+	// switches: PD2 PD3 PD4 PD5 PD6 (5 items, internally pulled up)
 
 	DDRD &= ~0x7C;
 	PORTD |= 0x7C;
 
-	// lights
+	// pin change interrupts on switches pins
 
-	DDRC |= 0x3F;
-	PORTC &= ~0x3F;
+	PCICR = (1 << PCIE2);
+	// pins PD2..PD6 correspond to PCINT18..PCINT22
+	PCMSK2 = (1 << PCINT18) | (1 << PCINT19) | (1 << PCINT20) |
+		 (1 << PCINT21) | (1 << PCINT22);
 
-	light_state_current = 0;
-	light_state_prev = 0;
-	trans_level = 255;
-
-	cli();
+	// initialize lights subsystem
+	setup_lights();
 
 	// USART0 is used for printing (see also print.h)
 	// params: 9600baud, 8data, no parity
@@ -78,23 +77,6 @@ void hal_setup(void)
 	UCSR0C = (0 << UMSEL00) | (0 << UMSEL01) | // asynchronous mode
 		 (1 << UCSZ01) | (1 << UCSZ00);	   // 8data
 
-	// timer 0 (PWM in software)
-
-	TCCR0A = 0;
-	TCCR0B = (0 << CS02) | (0 << CS01) | (1 << CS00);
-
-	// timer 1 (smooth lights state transition)
-	TCCR1A = 0;
-	TCCR1B = (0 << CS12) | (0 << CS11) | (1 << CS10);
-	TIMSK1 = (1 << TOIE1);
-
-	// pin change interrupts on switches pins
-
-	PCICR = (1 << PCIE2);
-	// switch pins PD2..PD6 correspond to PCINT18..PCINT22
-	PCMSK2 = (1 << PCINT18) | (1 << PCINT19) | (1 << PCINT20) |
-		 (1 << PCINT21) | (1 << PCINT22);
-
 	// sleeping mode
 	set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 
@@ -104,29 +86,27 @@ void hal_setup(void)
 	sei();
 }
 
-void hal_delay(unsigned char milli)
-{
-	while (milli--)
-		_delay_ms(1);
-}
+static inline void hal_write_internal(unsigned char light_state);
 
-/* must not be called from ISR */
-void hal_sleep_until_switch_change(void)
+static void setup_lights(void)
 {
-	while (!has_input_changed && !is_sleep_inhibited())
-		;
-	while (!has_input_changed)
-		sleep_mode();
-	has_input_changed = 0;
-}
+	// lights: PC0, PC1, PC2, PC3, PC4, PC5 (6 items)
 
-unsigned char hal_read(void)
-{
-	unsigned char result = PIND;
+	DDRC |= 0x3F;
+	PORTC &= ~0x3F;
 
-	// note ~ operator (internal pullups)
-	result = (~(result >> 2)) & 0x1F;
-	return result;
+	// timer 0 (PWM in software)
+	TCCR0A = 0;
+	TCCR0B = (0 << CS02) | (0 << CS01) | (1 << CS00);
+
+	// timer 1 (lights state transition)
+	TCCR1A = 0;
+	TCCR1B = (0 << CS12) | (0 << CS11) | (1 << CS10);
+
+	light_state_prev = 0;
+	light_state_current = 0;
+
+	hal_write_internal(0);
 }
 
 static inline void hal_write_internal(unsigned char light_state)
@@ -136,16 +116,78 @@ static inline void hal_write_internal(unsigned char light_state)
 
 void hal_write(unsigned char light_state)
 {
-	cli();
 	if (light_state != light_state_current) {
+		cli();
 		light_state_prev = light_state_current;
 		light_state_current = light_state;
-		trans_level = 0;
+		trans_level = 1;
 		sleep_inhibitors.timers = 1;
-		TIMSK0 |= (1 << TOIE0);
+		OCR0A = trans_level;
+		TIMSK0 |= (1 << TOIE0) | (1 << OCIE0A);
 		TIMSK1 |= (1 << TOIE1);
+		sei();
 	}
-	sei();
+}
+
+#define PWM_TRANS_STEP_WIDE (16000000UL / F_CPU * PWM_TRANS_SPEED)
+#define PWM_TRANS_STEP                                                         \
+	(PWM_TRANS_STEP_WIDE >= 255                                            \
+	     ? 255                                                             \
+	     : (PWM_TRANS_STEP_WIDE == 0                                       \
+		    ? 1                                                        \
+		    : (unsigned char)PWM_TRANS_STEP_WIDE))
+
+ISR(TIMER1_OVF_vect)
+{
+	trans_level += PWM_TRANS_STEP;
+	if (trans_level > 255 - PWM_TRANS_STEP) {
+		TIMSK0 &= ~((1 << TOIE0) | (1 << OCIE0A));
+		TIMSK1 &= ~(1 << TOIE1);
+		sleep_inhibitors.timers = 0;
+		hal_write_internal(light_state_current);
+	} else {
+		OCR0A = trans_level;
+	}
+}
+
+ISR(TIMER0_OVF_vect)
+{
+	hal_write_internal(light_state_current);
+}
+
+ISR(TIMER0_COMPA_vect)
+{
+	hal_write_internal(light_state_prev);
+}
+
+void hal_delay(unsigned char milli)
+{
+	while (milli--)
+		_delay_ms(1);
+}
+
+/* must not be called from any ISR */
+void hal_sleep_until_switch_change(void)
+{
+	while (!has_input_changed && !is_sleep_inhibited())
+		;
+	while (!has_input_changed)
+		sleep_mode();
+	has_input_changed = 0;
+}
+
+ISR(PCINT2_vect)
+{
+	has_input_changed = 1;
+}
+
+unsigned char hal_read(void)
+{
+	unsigned char result = PIND;
+
+	// note ~ operator (internal pullups)
+	result = (~(result >> 2)) & 0x1F;
+	return result;
 }
 
 void hal_start_print_buffer_transmission(void)
@@ -168,37 +210,4 @@ ISR(USART_UDRE_vect)
 		UCSR0B &= ~(1 << UDRIE0);
 		sleep_inhibitors.uart = 0;
 	}
-}
-
-ISR(PCINT2_vect)
-{
-	has_input_changed = 1;
-}
-
-#define PWM_TRANS_STEP_WIDE (16000000UL / F_CPU * PWM_TRANS_SPEED)
-#define PWM_TRANS_STEP                                                         \
-	(PWM_TRANS_STEP_WIDE >= 255                                            \
-	     ? 255                                                             \
-	     : (PWM_TRANS_STEP_WIDE == 0                                       \
-		    ? 1                                                        \
-		    : (unsigned char)PWM_TRANS_STEP_WIDE))
-
-ISR(TIMER1_OVF_vect)
-{
-	trans_level += PWM_TRANS_STEP;
-	if (trans_level > 255 - PWM_TRANS_STEP) {
-		TIMSK0 &= ~(1 << TOIE0);
-		TIMSK1 &= ~(1 << TOIE1);
-		sleep_inhibitors.timers = 0;
-		hal_write_internal(light_state_current);
-	}
-}
-
-ISR(TIMER0_OVF_vect)
-{
-	pwm_counter++;
-	if (pwm_counter == 0)
-		hal_write_internal(light_state_current);
-	else if (pwm_counter == trans_level)
-		hal_write_internal(light_state_prev);
 }
