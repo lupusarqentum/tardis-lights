@@ -47,7 +47,6 @@ void hal_setup(void)
 {
 	// switches: PD2 PD3 PD4 PD5 PD6 (5 items, internally pulled up)
 	// lights: PC0, PC1, PC2, PC3, PC4, PC5 (6 items)
-	// builtin LED at PB5 blinks occasionally for debugging purposes
 
 	// switches
 
@@ -58,11 +57,6 @@ void hal_setup(void)
 
 	DDRC |= 0x3F;
 	PORTC &= ~0x3F;
-
-	// builtin LED
-
-	DDRB |= (1 << PB5);
-	PORTB &= ~(1 << PB5);
 
 	light_state_current = 0;
 	light_state_prev = 0;
@@ -94,12 +88,6 @@ void hal_setup(void)
 	TCCR1B = (0 << CS12) | (0 << CS11) | (1 << CS10);
 	TIMSK1 = (1 << TOIE1);
 
-	// timer 2 (builtin led blink)
-
-	TCCR2A = 0;
-	TCCR2B = (0 << CS22) | (1 << CS21) | (1 << CS20);
-	TIMSK2 = (1 << TOIE2);
-
 	// pin change interrupts on switches pins
 
 	PCICR = (1 << PCIE2);
@@ -111,7 +99,7 @@ void hal_setup(void)
 	set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 
 	// power reduction by disabling unneeded modules
-	PRR = (1 << PRTWI) | (1 << PRSPI) | (1 << PRADC);
+	PRR = (1 << PRTWI) | (1 << PRSPI) | (1 << PRADC) | (1 << PRTIM2);
 
 	sei();
 }
@@ -185,11 +173,6 @@ ISR(USART_UDRE_vect)
 ISR(PCINT2_vect)
 {
 	has_input_changed = 1;
-}
-
-ISR(TIMER2_OVF_vect)
-{
-	PINB = (1 << PB5);
 }
 
 #define PWM_TRANS_STEP_WIDE (16000000UL / F_CPU * PWM_TRANS_SPEED)
