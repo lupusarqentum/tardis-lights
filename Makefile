@@ -39,6 +39,8 @@ CLANG_FORMAT_FIX_OPTIONS	:= $(CLANG_FORMAT_OPTIONS) -i
 CLANG_FORMAT_CHECK_OPTIONS	:= $(CLANG_FORMAT_OPTIONS) --dry-run
 CLANG_FORMAT_SOURCES		:= $(SOURCES) $(HEADERS)
 
+MONITOR_COMMAND := ./monitor.sh $(PORT) $(BAUDRATE)
+
 PHONY += all
 all: check build size
 
@@ -56,6 +58,10 @@ size: $(TARGET_ELF)
 PHONY += flash
 flash: $(TARGET_HEX)
 	$(AVRDUDE) $(AVRDUDE_OPTIONS)
+
+PHONY += monitor
+monitor:
+	$(MONITOR_COMMAND)
 
 PHONY += check
 check: clang-format-check
@@ -85,11 +91,14 @@ help:
 	@echo "  clean              - remove all build artifacts"
 	@echo "  build              - build the binary"
 	@echo "  size               - display sizes of sections of the binary"
-	@echo "  flash              - flash the binary"
+	@echo "  flash              - flash the binary, uses PORT variable"
+	@echo "  monitor            - monitor program logs during execution, uses PORT variable"
 	@echo "  check              - same as clang-format-check (other analyzers might appear later)"
 	@echo "  clang-format-check - use clang-format to check for styling violations"
 	@echo "  clang-format-fix   - use clang-format to fix styling violations"
 	@echo "  help               - display this information"
+	@echo
+	@echo "  .PHONY targets list: $(PHONY)"
 	@echo
 	@echo "  DEVICE           - mcu"
 	@echo "                       defaulted to: $(DEVICE)"
