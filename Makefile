@@ -8,7 +8,7 @@ TARGET_HEX	:= $(TARGET).hex
 PORT := /dev/ttyUSB0
 
 # common baud rate for communicating with bootloader and the main program
-BAUDRATE	:= 9600
+BAUDRATE	:= 57600
 
 DEVICE		:= atmega328p
 PGM		:= arduino
