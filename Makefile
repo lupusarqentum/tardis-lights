@@ -7,9 +7,12 @@ TARGET_HEX	:= $(TARGET).hex
 
 PORT := /dev/ttyUSB0
 
+# common baud rate for communicating with bootloader and the main program
+BAUDRATE	:= 57600
+
 DEVICE		:= atmega328p
 PGM		:= arduino
-PGM_BAUD	:= 57600
+PGM_BAUD	:= $(BAUDRATE)
 FREQUENCY	:= 16000000UL
 
 HEADERS := print.h hal.h puzzle.h
@@ -24,8 +27,9 @@ SIZE 	:= avr-size --format=berkeley
 CC 	:= avr-gcc
 OBJCOPY	:= avr-objcopy
 
-CFLAGS := 		-mmcu="$(DEVICE)" -DF_CPU=$(FREQUENCY) \
-			-Os -Wall -Wextra -Wpedantic -Werror -std=c11
+CFLAGS := 		-mmcu="$(DEVICE)" -DF_CPU=$(FREQUENCY)		\
+			-Os -Wall -Wextra -Wpedantic -Werror -std=c11	\
+			-DBAUD=$(BAUDRATE)
 AVRDUDE_OPTIONS :=	-P $(PORT) -v -p$(DEVICE) -c$(PGM) -b$(PGM_BAUD) -D -Uflash:w:$(TARGET_HEX):i
 OBJCOPY_OPTIONS :=	-j .text -j .data -O ihex
 
@@ -34,6 +38,8 @@ CLANG_FORMAT_OPTIONS		:= --Werror
 CLANG_FORMAT_FIX_OPTIONS	:= $(CLANG_FORMAT_OPTIONS) -i
 CLANG_FORMAT_CHECK_OPTIONS	:= $(CLANG_FORMAT_OPTIONS) --dry-run
 CLANG_FORMAT_SOURCES		:= $(SOURCES) $(HEADERS)
+
+MONITOR_COMMAND := ./monitor.sh $(PORT) $(BAUDRATE)
 
 PHONY += all
 all: check build size
@@ -52,6 +58,10 @@ size: $(TARGET_ELF)
 PHONY += flash
 flash: $(TARGET_HEX)
 	$(AVRDUDE) $(AVRDUDE_OPTIONS)
+
+PHONY += monitor
+monitor:
+	$(MONITOR_COMMAND)
 
 PHONY += check
 check: clang-format-check
@@ -81,11 +91,14 @@ help:
 	@echo "  clean              - remove all build artifacts"
 	@echo "  build              - build the binary"
 	@echo "  size               - display sizes of sections of the binary"
-	@echo "  flash              - flash the binary"
+	@echo "  flash              - flash the binary, uses PORT variable"
+	@echo "  monitor            - monitor program logs during execution, uses PORT variable"
 	@echo "  check              - same as clang-format-check (other analyzers might appear later)"
 	@echo "  clang-format-check - use clang-format to check for styling violations"
 	@echo "  clang-format-fix   - use clang-format to fix styling violations"
 	@echo "  help               - display this information"
+	@echo
+	@echo "  .PHONY targets list: $(PHONY)"
 	@echo
 	@echo "  DEVICE           - mcu"
 	@echo "                       defaulted to: $(DEVICE)"
@@ -97,6 +110,8 @@ help:
 	@echo "                       defaulted to: $(PGM)"
 	@echo "  PGM_BAUD         - avrdude baud option"
 	@echo "                       defaulted to: $(PGM_BAUD)"
+	@echo "  BAUDRATE         - default baud rate for avrdude and C code"
+	@echo "                       defaulted to: $(BAUDRATE)"
 	@echo "  AVRDUDE_OPTIONS  - avrdude options"
 	@echo "                       defaulted to: $(AVRDUDE_OPTIONS)"
 
