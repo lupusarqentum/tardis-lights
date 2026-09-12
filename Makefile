@@ -7,9 +7,12 @@ TARGET_HEX	:= $(TARGET).hex
 
 PORT := /dev/ttyUSB0
 
+# common baud rate for communicating with bootloader and the main program
+BAUDRATE	:= 9600
+
 DEVICE		:= atmega328p
 PGM		:= arduino
-PGM_BAUD	:= 57600
+PGM_BAUD	:= $(BAUDRATE)
 FREQUENCY	:= 16000000UL
 
 HEADERS := print.h hal.h puzzle.h
@@ -24,8 +27,9 @@ SIZE 	:= avr-size --format=berkeley
 CC 	:= avr-gcc
 OBJCOPY	:= avr-objcopy
 
-CFLAGS := 		-mmcu="$(DEVICE)" -DF_CPU=$(FREQUENCY) \
-			-Os -Wall -Wextra -Wpedantic -Werror -std=c11
+CFLAGS := 		-mmcu="$(DEVICE)" -DF_CPU=$(FREQUENCY)		\
+			-Os -Wall -Wextra -Wpedantic -Werror -std=c11	\
+			-DBAUD=$(BAUDRATE)
 AVRDUDE_OPTIONS :=	-P $(PORT) -v -p$(DEVICE) -c$(PGM) -b$(PGM_BAUD) -D -Uflash:w:$(TARGET_HEX):i
 OBJCOPY_OPTIONS :=	-j .text -j .data -O ihex
 
@@ -97,6 +101,8 @@ help:
 	@echo "                       defaulted to: $(PGM)"
 	@echo "  PGM_BAUD         - avrdude baud option"
 	@echo "                       defaulted to: $(PGM_BAUD)"
+	@echo "  BAUDRATE         - default baud rate for avrdude and C code"
+	@echo "                       defaulted to: $(BAUDRATE)"
 	@echo "  AVRDUDE_OPTIONS  - avrdude options"
 	@echo "                       defaulted to: $(AVRDUDE_OPTIONS)"
 

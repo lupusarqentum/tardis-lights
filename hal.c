@@ -72,7 +72,8 @@ void hal_setup(void)
 	setup_lights();
 
 	// USART0 is used for printing (see also print.h)
-	// params: 9600baud, 8data, no parity
+	// params: 8data, no parity
+	// baudrate provided by -DBAUD=... cc option, fallbacks to 9600
 
 	UBRR0H = UBRRH_VALUE; // defined by <util/setbaud.h>
 	UBRR0L = UBRRL_VALUE;
